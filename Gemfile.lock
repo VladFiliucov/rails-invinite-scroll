@@ -138,6 +138,7 @@ GEM
     nokogiri (1.12.5)
       mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
+    pagy (3.14.0)
     parallel (1.21.0)
     parser (3.0.2.0)
       ast (~> 2.4.1)
@@ -246,6 +247,8 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    stimulus-rails (0.7.1)
+      rails (>= 6.0.0)
     thor (1.1.0)
     tilt (2.0.10)
     turbolinks (5.2.1)
@@ -295,6 +298,7 @@ DEPENDENCIES
   letter_opener
   listen (~> 3.3)
   minitest-ci
+  pagy (~> 3.5)
   pg (~> 1.1)
   pgcli-rails
   postmark-rails
@@ -311,6 +315,7 @@ DEPENDENCIES
   shoulda-context
   shoulda-matchers
   sidekiq
+  stimulus-rails
   turbolinks (~> 5)
   web-console (>= 4.1.0)
   webdrivers
