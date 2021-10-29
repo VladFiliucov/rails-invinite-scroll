@@ -1,8 +1,17 @@
 import { Controller } from "stimulus"
 import Rails from '@rails/ujs';
 
+const observer = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (entry.intersectionRatio === 1){
+      console.log('footer visible');
+    }
+  });
+}, { threshold: 1 })
+
 export default class extends Controller {
   static targets = ["entries", "pagination"]
+
 
   scroll() {
     const body = document.body;
@@ -10,7 +19,11 @@ export default class extends Controller {
     const url = this.paginationTarget.querySelector("a[rel='next']")?.href
 
     const height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight)
+    const footer = document.querySelector('footer');
 
+    if (footer) {
+      observer.observe(footer);
+    }
     // if (window.pageYOffset >= height - window.innerHeight) {
     //   if (url) this.loadMore(url);
     // }
