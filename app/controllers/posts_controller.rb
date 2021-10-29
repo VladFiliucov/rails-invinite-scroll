@@ -5,6 +5,13 @@ class PostsController < ApplicationController
   # GET /posts
   def index
     @pagy, @posts = pagy(Post.all)
+
+    respond_to do |format|
+      format.html
+      format.json {
+        render json: { entries: render_to_string(partial: "posts", formats: [:html]), pagination: view_context.pagy_nav(@pagy) }
+      }
+    end
   end
 
   # GET /posts/1
