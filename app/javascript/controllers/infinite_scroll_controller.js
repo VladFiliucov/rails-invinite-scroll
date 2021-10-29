@@ -1,32 +1,43 @@
 import { Controller } from "stimulus"
 import Rails from '@rails/ujs';
 
-const observer = new IntersectionObserver((entries, observer) => {
-  entries.forEach(entry => {
-    if (entry.intersectionRatio === 1){
-      console.log('footer visible');
-    }
-  });
-}, { threshold: 1 })
-
 export default class extends Controller {
   static targets = ["entries", "pagination"]
 
+  initialize() {
+    this.footer = document.querySelector('footer');
+    this.intersectionObserver = new IntersectionObserver(entries => this.processIntersectionEntries(entries))
+  }
+  connect() {
+    this.intersectionObserver.observe(this.footer)
+  }
+  disconnect() {
+    this.intersectionObserver.unobserve(this.footer)
+  }
 
   scroll() {
-    const body = document.body;
-    const html = document.documentElement;
-    const url = this.paginationTarget.querySelector("a[rel='next']")?.href
+    return false;
+  //   const body = document.body;
+  //   const html = document.documentElement;
 
-    const height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight)
-    const footer = document.querySelector('footer');
+  //   const height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight)
 
-    if (footer) {
-      observer.observe(footer);
-    }
-    // if (window.pageYOffset >= height - window.innerHeight) {
-    //   if (url) this.loadMore(url);
-    // }
+  //   // if (footer) {
+  //   //   this.observer.observe(footer);
+  //   // }
+  //   // if (window.pageYOffset >= height - window.innerHeight) {
+  //   //   if (url) this.loadMore(url);
+  //   // }
+  }
+
+  processIntersectionEntries(entries) {
+    entries.forEach(entry => {
+      // fetch new posts only when footer is getting into view port
+      if (entry.intersectionRatio > 0){
+        const url = this.paginationTarget.querySelector("a[rel='next']")?.href
+        if (url) this.loadMore(url);
+      }
+    }, { threshold: 1 })
   }
 
   loadMore(url) {
@@ -35,8 +46,6 @@ export default class extends Controller {
       url,
       dataType: 'json',
       success: (data) => {
-        // console.log('Got more data', data);
-        // console.log('what', this.entriesTarget);
         this.entriesTarget.insertAdjacentHTML('beforeend', data.entries);
         this.paginationTarget.innerHTML = data.pagination;
       }
